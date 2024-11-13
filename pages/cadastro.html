@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="/styles/styleCadastro.css">
+</head>
+
+<body>
+    <div class="container">
+        <form id="cadastroForm">
+            <h2>Cadastro</h2>
+
+            <label for="Nome">Nome:</label>
+            <input type="text" id="name" name="name" placeholder="Digite seu nome" required>
+            <p class="error-message" id="nameError"></p>
+
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+            <p class="error-message" id="emailError"></p>
+
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            <p class="error-message" id="passwordError"></p>
+
+            <label for="animes">Anime Favorito:</label>
+
+            <select name="animes" id="animes" multiple>
+            <option value="Naruto">Naruto</option>
+            <option value="DragonBall">Dragon Ball</option>
+            <option value="One Piece">One Piece</option>
+            <option value="Attack On Titan">Attack On Titan</option>
+            <option value="Bleach">Bleach</option>
+            </select><br>
+
+            <button type="submit">Cadastrar</button>
+            <p id="feedback"></p>
+
+            <span>Já possui uma conta ? <a href="/pages/login.html">Log-In</a></span>
+        </form>
+    </div>
+
+    <script src="/js/scriptCadastro.js"></script>
+</body>
+
+</html> 
