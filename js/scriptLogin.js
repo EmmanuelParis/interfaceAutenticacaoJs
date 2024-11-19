@@ -10,11 +10,19 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
   
     feedback.textContent = '';
 
+    //pegando os dados do usuario
+    const usuarioSalvo = JSON.parse(localStorage.getItem('usuarioGuardado'));
+
+    if(usuarioSalvo){
+      console.log(usuarioSalvo.email);
+      console.log(usuarioSalvo.password);
+    }
+
     // Simulação de verificação simples (email e senha corretos)
-    if (email === 'a@gmail.com' && password === '12345678') {
+    if (usuarioSalvo.email === email && usuarioSalvo.password === password) {
       feedback.textContent = 'Login bem-sucedido!';
       feedback.style.color = 'green';
-      window.location.href = 'https://developer.mozilla.org/pt-BR/docs/Learn/Forms';
+      window.location.href = './homePage.html';
     } else {
       feedback.textContent = 'Usuário ou senha incorretos!';
       feedback.style.color = 'red';

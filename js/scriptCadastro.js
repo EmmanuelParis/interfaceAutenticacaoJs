@@ -22,19 +22,29 @@ document.getElementById('cadastroForm').addEventListener('submit', function(even
     if (!nameRegEx.test(name)) {
       nameError.textContent = 'Formato de nome inválido';
       return;
-    }
+    };
     // Validação de e-mail (RegEx para verificar formato de e-mail)
     const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegEx.test(email)) {
       emailError.textContent = 'Formato de e-mail inválido';
       return;
-    }
+    };
   
     // Validação de senha (mínimo de 8 caracteres, com pelo menos 1 letra e 1 número)
     const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordRegEx.test(password)) {
       passwordError.textContent = 'A senha deve ter no mínimo 8 caracteres, incluindo letras e números.';
       return;
-    }
+    };
+
+    const usuarioTest = {
+      name,
+      email,
+      password
+    };
+
+    localStorage.setItem('usuarioGuardado', JSON.stringify(usuarioTest));
+
+    feedback.textContent = 'Cadastro bem-sucedido!';
   
   });
