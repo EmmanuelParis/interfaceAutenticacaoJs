@@ -36,7 +36,17 @@ document.getElementById('cadastroForm').addEventListener('submit', function(even
       passwordError.textContent = 'A senha deve ter no mínimo 8 caracteres, incluindo letras e números.';
       return;
     };
+  
+    const selectedAnimes = Array.from(document.getElementById('anime-select').selectedOptions).map(option => option.value);
 
+    if (selectedAnimes.length > 0) {
+      localStorage.setItem('selectedAnimes', JSON.stringify(selectedAnimes));
+      alert('Animes salvos com sucesso!');
+    } else {
+      alert('Por favor, selecione pelo menos um anime!');
+      return; 
+    }
+  
     const usuarioTest = {
       name,
       email,
@@ -46,5 +56,4 @@ document.getElementById('cadastroForm').addEventListener('submit', function(even
     localStorage.setItem('usuarioGuardado', JSON.stringify(usuarioTest));
 
     feedback.textContent = 'Cadastro bem-sucedido!';
-  
-  });
+});

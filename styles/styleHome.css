@@ -1,0 +1,59 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #222831;
+    height: 98vh;
+    color: #f2f2f2;
+    margin: 0;
+}
+
+h1 {
+    font-size: 36px;
+    color: #f96d00;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
+span {
+    display: block;
+    text-align: center;
+}
+
+
+p {
+    text-align: center;
+    font-size: 20px;
+    color: #f2f2f2;
+    margin-top: 10px;
+    font-weight: 300;
+}
+
+.container h1 {
+    font-size: 30px;
+    color: #f96d00;
+}
+
+button {
+    transition: background-color 0.3s ease;
+}
+
+#anime-banners img {
+    max-width: 200px;
+    border-radius: 10px;
+    margin: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+#anime-banners p {
+    color: #f2f2f2;
+    font-size: 18px;
+}
