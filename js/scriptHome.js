@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     const animeBanners = document.getElementById("anime-banners");
     const bemVindo = document.getElementById("bemVindo");
+    const emailUser = document.getElementById("email")
 
     loadUserPreferences();
     loadUserName();
@@ -10,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log(userName.name)
         if (userName != null) {
             bemVindo.textContent = `Seja bem-vindo, ${userName.name}!`;
+            emailUser.textContent =  `Seu email é: ${userName.email}`
         } else {
            bemVindo.textContent = "Seja bem-vindo!";
         }
@@ -45,15 +47,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
         selectedAnimes.forEach(anime => {
             if (banners[anime] && !displayedAnimes.includes(anime)) {
+                const divElement = document.createElement("div");
+                divElement.classList.add("animes");
+
+                const titleElement = document.createElement("p")
+                titleElement.textContent = anime;
+
                 const imgElement = document.createElement("img");
                 imgElement.src = banners[anime];
                 imgElement.alt = anime;
+
+                divElement.appendChild(imgElement);
+                divElement.appendChild(titleElement);
 
                 imgElement.onerror = function() {
                     imgElement.alt = "Imagem não encontrada";
                 };
 
-                animeBanners.appendChild(imgElement);
+                animeBanners.appendChild(divElement);
                 displayedAnimes.push(anime);
             }
         });
