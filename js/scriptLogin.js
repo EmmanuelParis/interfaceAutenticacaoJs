@@ -1,3 +1,5 @@
+const UrlLogin = "https://projetoweb-api.vercel.app/auth/login"
+
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
   
@@ -11,20 +13,24 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     feedback.textContent = '';
 
     //pegando os dados do usuario
-    const usuarioSalvo = JSON.parse(localStorage.getItem('usuarioGuardado'));
 
-    if(usuarioSalvo){
-      console.log(usuarioSalvo.email);
-      console.log(usuarioSalvo.password);
+    const userLogin = {
+      email: email,
+      password: password,
     }
 
-    // Simulação de verificação simples (email e senha corretos)
-    if (usuarioSalvo.email === email && usuarioSalvo.password === password) {
-      feedback.textContent = 'Login bem-sucedido!';
-      feedback.style.color = 'green';
-      window.location.href = './homePage.html';
-    } else {
-      feedback.textContent = 'Usuário ou senha incorretos!';
-      feedback.style.color = 'red';
-    }
+    fetch(UrlLogin, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(userLogin)})
+    .then(response => {
+      if (response === 401){
+        throw new Error("Erro: " + response.message);
+      }
+      return response.json;
+    })
+    .then(respData => {
+      console.log("Usuario logado", respData);
+      window.location.href = "homePage.html";
+    })
+    .catch(err => {
+      console.error("Erro: ", err);
+    })
   });

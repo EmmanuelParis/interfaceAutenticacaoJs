@@ -1,3 +1,5 @@
+const UrlCadastro = "https://projetoweb-api.vercel.app/auth/register"
+
 document.getElementById('cadastroForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Previne o comportamento padrão do formulário
   
@@ -40,20 +42,32 @@ document.getElementById('cadastroForm').addEventListener('submit', function(even
     const selectedAnimes = Array.from(document.getElementById('anime-select').selectedOptions).map(option => option.value);
 
     if (selectedAnimes.length > 0) {
-      localStorage.setItem('selectedAnimes', JSON.stringify(selectedAnimes));
       alert('Animes salvos com sucesso!');
     } else {
       alert('Por favor, selecione pelo menos um anime!');
       return; 
     }
-  
-    const usuarioTest = {
-      name,
-      email,
-      password
+
+    const usuarioCadastrado = {
+      name : name,
+      email: email,
+      password: password,
+      anime_preference: selectedAnimes
     };
 
-    localStorage.setItem('usuarioGuardado', JSON.stringify(usuarioTest));
+    fetch(UrlCadastro, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(usuarioCadastrado)})
+    .then(response => {
+      if(response.code === 400){
+        throw new Error("Erro: " + response.message);
+      }
+      return response.json();
+    })
+    .then(respData => {
+      console.log("Teste da resposta da Api", respData)
+    })
+    .catch(err => {
+      console.error("erro", err)
+    })
 
     feedback.textContent = 'Cadastro bem-sucedido!';
 });
