@@ -24,11 +24,12 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
       if (response === 401){
         throw new Error("Erro: " + response.message);
       }
-      return response.json;
+      return response.json();
     })
-    .then(respData => {
-      console.log("Usuario logado", respData);
-      window.location.href = "homePage.html";
+    .then(usuario => {
+      localStorage.setItem('usuario', JSON.stringify(usuario.user));
+      console.log(usuario);
+      window.location.href="/pages/homePage.html"
     })
     .catch(err => {
       console.error("Erro: ", err);

@@ -1,76 +1,45 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const animeBanners = document.getElementById("anime-banners");
-    const bemVindo = document.getElementById("bemVindo");
-    const emailUser = document.getElementById("email")
+const data = JSON.parse(localStorage.getItem('user'));
 
-    loadUserPreferences();
-    loadUserName();
+    document.getElementById('name').textContent = data.name || 'username'
+    document.getElementById('user-email').textContent = data.email || 'example@example.com';
 
-    function loadUserName() {
-        const userName = JSON.parse(localStorage.getItem("usuarioGuardado"));
-        console.log(userName.name)
-        if (userName != null) {
-            bemVindo.textContent = `Seja bem-vindo, ${userName.name}!`;
-            emailUser.textContent =  `Seu email é: ${userName.email}`
-        } else {
-           bemVindo.textContent = "Seja bem-vindo!";
-        }
+    const sectionAnimes = document.getElementById('anime-banners');
+
+    data.animes.map(anime => {
+        const cover = new Image();
+        cover.src = anime.cover;
+        cover.alt = anime.title;
+
+        const title = document.createElement('p');
+        title.textContent = anime.title;
+
+        const animeCard = document.createElement('div');
+        animeCard.classList.add('anime-banners');
+
+        animeCard.append(cover);
+        animeCard.append(title);
+
+        sectionAnimes.append(animeCard);
+    })
+
+
+    function logout() {
+        showToast('Você foi deslogado com sucesso.', 'success');
+        setTimeout(() => {
+            localStorage.removeItem('user');
+            window.location.href = "/pages/login.html";
+        }, 3000);
     }
 
-    function loadUserPreferences() {
-        try {
-            const selectedAnimes = JSON.parse(localStorage.getItem("selectedAnimes")) || [];
+    function showToast(message, type = 'success') {
+        const container = document.querySelector('.toast-container');
+        const toast = document.createElement('div');
+        toast.classList.add('toast', type);
+        toast.textContent = message;
 
-            if (selectedAnimes.length > 0) {
-                displayBanners(selectedAnimes);
-            } else {
-                animeBanners.innerHTML = "<p>Nenhum anime selecionado.</p>";
-            }
-        } catch (error) {
-            console.error("Erro ao carregar os dados de animes: ", error);
-            animeBanners.innerHTML = "<p>Erro ao carregar preferências de animes.</p>";
-        }
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
     }
-
-    function displayBanners(selectedAnimes) {
-        animeBanners.innerHTML = "";
-
-        const banners = {
-            "Naruto": "/img/Naruto.webp",
-            "One-Piece": "/img/One-Piece.jpg",
-            "Attack-On-Titan": "/img/Attack-On-Titan.webp",
-            "Dragon-Ball": "/img/Dragon-Ball.jpg",
-            "Bleach": "/img/Bleach.jpg"
-        };
-
-        let displayedAnimes = [];
-
-        selectedAnimes.forEach(anime => {
-            if (banners[anime] && !displayedAnimes.includes(anime)) {
-                const divElement = document.createElement("div");
-                divElement.classList.add("animes");
-
-                const titleElement = document.createElement("p")
-                titleElement.textContent = anime;
-
-                const imgElement = document.createElement("img");
-                imgElement.src = banners[anime];
-                imgElement.alt = anime;
-
-                divElement.appendChild(imgElement);
-                divElement.appendChild(titleElement);
-
-                imgElement.onerror = function() {
-                    imgElement.alt = "Imagem não encontrada";
-                };
-
-                animeBanners.appendChild(divElement);
-                displayedAnimes.push(anime);
-            }
-        });
-
-        if (animeBanners.innerHTML === "") {
-            animeBanners.innerHTML = "<p>Nenhum banner disponível para os animes selecionados.</p>";
-        }
-    }
-});

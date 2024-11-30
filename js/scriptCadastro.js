@@ -1,73 +1,104 @@
-const UrlCadastro = "https://projetoweb-api.vercel.app/auth/register"
+const form = document.getElementById("cadastroForm");
 
-document.getElementById('cadastroForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Previne o comportamento padrão do formulário
-  
-    // Captura os valores do formulário
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-  
-    // Elementos para exibir os erros
-    const nameError = document.getElementById('nameError');
-    const emailError = document.getElementById('emailError');
-    const passwordError = document.getElementById('passwordError');
-  
-    // Limpa as mensagens de erro
-    nameError.textContent = '';
-    emailError.textContent = '';
-    passwordError.textContent = '';
-    feedback.textContent = '';
-  
-    // Validação de e-mail (RegEx para verificar formato de e-mail)
-    const nameRegEx = /([a-zA-Z0-9_\s]+)/g;
-    if (!nameRegEx.test(name)) {
-      nameError.textContent = 'Formato de nome inválido';
+form.addEventListener('submit', async (e) => {
+  const api_url = 'https://projetoweb-api.vercel.app';
+
+  e.preventDefault();
+
+  const formData = new FormData(form);
+
+  if (!formData.get('name') || !formData.get("email") || !formData.get("password")) {
+      alert("Os campos precisam ser preenchidos");
       return;
-    };
-    // Validação de e-mail (RegEx para verificar formato de e-mail)
-    const emailRegEx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegEx.test(email)) {
-      emailError.textContent = 'Formato de e-mail inválido';
+  } else if (formData.get("password").length < 8) {
+      showToast("A senha precisa conter no minimo 8 caracteres", 'warning');
       return;
-    };
-  
-    // Validação de senha (mínimo de 8 caracteres, com pelo menos 1 letra e 1 número)
-    const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!passwordRegEx.test(password)) {
-      passwordError.textContent = 'A senha deve ter no mínimo 8 caracteres, incluindo letras e números.';
+  } else if (formData.get("name").length < 3) {
+      showToast("O nome precisa conter no minimo 8 caracteres", 'warning');
       return;
-    };
-  
-    const selectedAnimes = Array.from(document.getElementById('anime-select').selectedOptions).map(option => option.value);
+  }
 
-    if (selectedAnimes.length > 0) {
-      alert('Animes salvos com sucesso!');
-    } else {
-      alert('Por favor, selecione pelo menos um anime!');
-      return; 
-    }
+  const animePreferences = Array.from(
+      document.getElementById("anime_preference").selectedOptions
+  ).map(option => option.value);
 
-    const usuarioCadastrado = {
-      name : name,
-      email: email,
-      password: password,
-      anime_preference: selectedAnimes
-    };
+  if (animePreferences.length === 0) {
+      showToast("Selecione ao menos um anime preferido", 'warning');
+      return;
+  }
 
-    fetch(UrlCadastro, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(usuarioCadastrado)})
-    .then(response => {
-      if(response.code === 400){
-        throw new Error("Erro: " + response.message);
-      }
-      return response.json();
-    })
-    .then(respData => {
-      console.log("Teste da resposta da Api", respData)
-    })
-    .catch(err => {
-      console.error("erro", err)
-    })
+  console.log(animePreferences)
 
-    feedback.textContent = 'Cadastro bem-sucedido!';
+  formData.delete("anime_preference");
+  formData.append("anime_preference", animePreferences);
+
+  const formDataObject = {};
+  formData.forEach((value, key) => {
+      formDataObject[key] = value;
+  });
+
+  const response = await fetch(api_url + "/auth/register", {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formDataObject)
+  });
+
+  if (response.ok) {
+      const result = await response.json();
+
+      showToast("Conta criada com sucesso!", 'success');
+
+      setTimeout(() => {
+          window.location.href = "/pages/login.html";
+      }, 3000);
+  } else {
+      const error = await response.json();
+
+      showToast(error.message, 'success');
+  }
 });
+
+    const api_url = 'https://projetoweb-api.vercel.app';
+    const select = document.getElementById("anime_preference");
+
+    select.innerHTML = "";
+
+    const getAnimes = async () => {
+        
+        try {
+            const response = await fetch(api_url + "/anime", {
+                method: 'GET'
+            });
+
+            if (response.ok) {
+                let animes = await response.json();
+                animes = animes.animes
+                
+                animes.map((anime) => {
+                    const option = document.createElement("option");
+                    option.value = anime.id;
+                    option.textContent = anime.title;
+                    select.appendChild(option);
+                })
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    };
+
+getAnimes();
+
+function showToast(message, type = 'success') {
+  const container = document.querySelector('.toast-container');
+  const toast = document.createElement('div');
+  toast.classList.add('toast', type);
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+      toast.remove();
+  }, 3000);
+}
