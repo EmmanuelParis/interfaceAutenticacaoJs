@@ -1,7 +1,7 @@
-const data = JSON.parse(localStorage.getItem('user'));
+const data = JSON.parse(localStorage.getItem('usuario'));
 
-    document.getElementById('name').textContent = data.name || 'username'
-    document.getElementById('user-email').textContent = data.email || 'example@example.com';
+    document.getElementById('name').textContent = data.name
+    document.getElementById('email').textContent = data.email
 
     const sectionAnimes = document.getElementById('anime-banners');
 
@@ -14,7 +14,7 @@ const data = JSON.parse(localStorage.getItem('user'));
         title.textContent = anime.title;
 
         const animeCard = document.createElement('div');
-        animeCard.classList.add('anime-banners');
+        animeCard.classList.add('anime-card');
 
         animeCard.append(cover);
         animeCard.append(title);
@@ -26,7 +26,7 @@ const data = JSON.parse(localStorage.getItem('user'));
     function logout() {
         showToast('Você foi deslogado com sucesso.', 'success');
         setTimeout(() => {
-            localStorage.removeItem('user');
+            localStorage.removeItem('usuario');
             window.location.href = "/pages/login.html";
         }, 3000);
     }
